@@ -1,0 +1,16 @@
+{
+  "dev": {
+    "driver": "pg",
+    "host": "localhost",
+    "database": "full_stack_dev",
+    "user": "djshaneoston",
+    "password": "password123"
+  },
+  "test": {
+    "driver": "pg",
+    "host": "127.0.0.1",
+    "database": "fantasy_worlds_test",
+    "user": "test_user",
+    "password": "password123"
+  }
+}

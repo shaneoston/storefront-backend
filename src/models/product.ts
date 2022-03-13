@@ -1,23 +1,22 @@
 // @ts-ignore
-import Client from '../database'
+import pool from '../utils/database'
 
 export type Product = {
-    id: number
+    id?: number
     name: string
     price: number
     category: string
 }
 
 export class ProductStore {
-    async index(): Promise<Product[]> {
+    async getProducts(): Promise<Product[]> {
         try {
             // @ts-ignore
-            const conn = await Client.connect()
+            const connection = await pool.connect()
             const sql = 'SELECT * FROM products'
 
-            const result = await conn.query(sql)
-
-            conn.release()
+            const result = await connection.query(sql)
+            connection.release()
 
             return result.rows
         } catch (err) {
@@ -25,15 +24,14 @@ export class ProductStore {
         }
     }
 
-    async show(id: string): Promise<Product> {
+    async getProductById(id: number): Promise<Product> {
         try {
             const sql = 'SELECT * FROM products WHERE id=($1)'
             // @ts-ignore
-            const conn = await Client.connect()
+            const connection = await pool.connect()
 
-            const result = await conn.query(sql, [id])
-
-            conn.release()
+            const result = await connection.query(sql, [id])
+            connection.release()
 
             return result.rows[0]
         } catch (err) {
@@ -41,17 +39,27 @@ export class ProductStore {
         }
     }
 
-    async create(p: Product): Promise<Product> {
+    async createProduct(p: Product): Promise<Product> {
         try {
             const sql =
                 'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *'
             // @ts-ignore
-            const conn = await Client.connect()
+            const connection = await pool.connect()
 
-            const result = await conn.query(sql, [p.name, p.price, p.category])
-            conn.release()
+            const result = await connection.query(sql, [
+                p.name,
+                p.price,
+                p.category,
+            ])
+            connection.release()
 
-            return result.rows[0]
+            const { rows } = result
+            return {
+                id: rows[0].id,
+                name: rows[0].name,
+                price: Number(rows[0].price),
+                category: rows[0].category,
+            }
         } catch (err) {
             throw new Error(
                 `Could not add new product ${p.name}. Error: ${err}`
@@ -59,11 +67,11 @@ export class ProductStore {
         }
     }
 
-    async delete(id: string): Promise<Product> {
+    async deleteProduct(id: string): Promise<Product> {
         try {
             const sql = 'DELETE FROM products WHERE id=($1)'
             // @ts-ignore
-            const conn = await Client.connect()
+            const conn = await pool.connect()
 
             const result = await conn.query(sql, [id])
             conn.release()

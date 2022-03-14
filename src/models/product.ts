@@ -4,7 +4,7 @@ import pool from '../utils/database'
 export type Product = {
     id?: number
     name: string
-    price: number
+    price?: number | string
     category: string
 }
 
@@ -53,13 +53,7 @@ export class ProductStore {
             ])
             connection.release()
 
-            const { rows } = result
-            return {
-                id: rows[0].id,
-                name: rows[0].name,
-                price: Number(rows[0].price),
-                category: rows[0].category,
-            }
+            return result.rows[0]
         } catch (err) {
             throw new Error(
                 `Could not add new product ${p.name}. Error: ${err}`
@@ -67,7 +61,7 @@ export class ProductStore {
         }
     }
 
-    async deleteProduct(id: string): Promise<Product> {
+    async deleteProduct(id: number): Promise<Product> {
         try {
             const sql = 'DELETE FROM products WHERE id=($1)'
             // @ts-ignore

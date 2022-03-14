@@ -2,13 +2,6 @@ import { ProductStore } from '../../models/product'
 
 const store = new ProductStore()
 
-const product = {
-    name: 'Test product',
-    // prettier-ignore
-    price: 4.00,
-    category: 'Test category',
-}
-
 describe('Product Model', () => {
     describe('CRUD methods exist', () => {
         it('for getProducts', () => {
@@ -20,11 +13,11 @@ describe('Product Model', () => {
         })
 
         it('for createProduct', () => {
-            expect(store.createProduct(product)).toBeDefined()
+            expect(store.createProduct).toBeDefined()
         })
 
         it('for deleteProduct', () => {
-            expect(store.deleteProduct('3')).toBeDefined()
+            expect(store.deleteProduct).toBeDefined()
         })
     })
 
@@ -40,9 +33,40 @@ describe('Product Model', () => {
                 id: 1,
                 name: 'Test product',
                 // prettier-ignore
-                price: 40.00,
+                price: '$40.00',
                 category: 'Test category',
             })
+        })
+
+        it('should return a list of products', async () => {
+            const result = await store.getProducts()
+            expect(result).toEqual([
+                {
+                    id: 1,
+                    name: 'Test product',
+                    // prettier-ignore
+                    price: '$40.00',
+                    category: 'Test category',
+                },
+            ])
+        })
+
+        it('should return the correct product', async () => {
+            const result = await store.getProductById(1)
+            expect(result).toEqual({
+                id: 1,
+                name: 'Test product',
+                // prettier-ignore
+                price: '$40.00',
+                category: 'Test category',
+            })
+        })
+
+        it('should delete the book', async () => {
+            await store.deleteProduct(1)
+            const result = await store.getProducts()
+
+            expect(result).toEqual([])
         })
     })
 })

@@ -35,6 +35,6 @@
   "scripts": {
     "build": "yarn prebuild && npx tsc",
     "prebuild": "rimraf dist",
-    "test": "db-migrate --env test up && yarn build && ENV=test jasmine && db-migrate --env test reset"
+    "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && db-migrate reset --e test"
   }
 }

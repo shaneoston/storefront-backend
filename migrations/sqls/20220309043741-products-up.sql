@@ -1,6 +1,6 @@
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    price numeric(7,2) DEFAULT 0.00,
-    category VARCHAR(50)
+    name varchar(100) NOT NULL,
+    price money DEFAULT 0.00,
+    category varchar(50)
 )

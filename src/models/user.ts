@@ -3,8 +3,8 @@ import pool from '../utils/database'
 
 export type User = {
     id?: number
-    firstName: string
-    lastName: string
+    first_name: string
+    last_name: string
     password_digest: string
 }
 
@@ -40,12 +40,12 @@ export class UserStore {
     async createUser(u: User): Promise<User> {
         try {
             const sql =
-                'INSERT INTO users (firstname, lastname, password_digest) VALUES($1, $2, $3) RETURNING *'
+                'INSERT INTO users (first_name, last_name, password_digest) VALUES($1, $2, $3) RETURNING *'
             // @ts-ignore
             const connection = await pool.connect()
             const result = await connection.query(sql, [
-                u.firstName,
-                u.lastName,
+                u.first_name,
+                u.last_name,
                 u.password_digest,
             ])
             connection.release()
@@ -53,7 +53,7 @@ export class UserStore {
             return result.rows[0]
         } catch (err) {
             throw new Error(
-                `Could not add new user ${u.firstName}. Error: ${err}`
+                `Could not add new user ${u.first_name}. Error: ${err}`
             )
         }
     }

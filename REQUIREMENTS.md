@@ -22,20 +22,57 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 #### Product
--  id
+The table includes the following fields: 
+- id
 - name
 - price
-- [OPTIONAL] category
+- category
+The SQL schema for this table is as follows: 
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name varchar(100) NOT NULL,
+    price money DEFAULT 0.00,
+    category varchar(50)
+)
+```
 
 #### User
+The table includes the following fields:
 - id
 - firstName
 - lastName
 - password
+The SQL schema for this table is as follows:
+```sql
+CREATE TABLE "users" (
+     id SERIAL PRIMARY KEY,
+     first_name VARCHAR(100),
+     last_name VARCHAR(100) NOT NULL,
+     password_digest VARCHAR
+)
+```
 
 #### Orders
+The table includes the following fields:
 - id
 - id of each product in the order
 - quantity of each product in the order
 - user_id
 - status of order (active or complete)
+The SQL schema for this table is as follows:
+```sql
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    product_id int NOT NULL,
+    quantity int NOT NULL,
+    user_id INT NOT NULL,
+    status VARCHAR(8) NOT NULL,
+    CONSTRAINT fk_orders_users
+        FOREIGN KEY (user_id)
+            REFERENCES users(id),
+    CONSTRAINT fk_orders_products
+        FOREIGN KEY (product_id)
+            REFERENCES products(id)
+);
+```

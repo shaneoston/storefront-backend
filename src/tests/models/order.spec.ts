@@ -26,9 +26,9 @@ describe('Order Model', () => {
     })
 
     describe('CRUD methods tests: ', () => {
-        it('should create an order', async () => {
+        beforeAll(async () => {
             await productStore.createProduct({
-                name: 'Test product',
+                name: 'Superman under roos',
                 // prettier-ignore
                 price: 40.00,
                 category: 'Test category',
@@ -38,6 +38,14 @@ describe('Order Model', () => {
                 last_name: 'Test',
                 password_digest: 'password123',
             })
+        })
+
+        afterAll(async () => {
+            await productStore.deleteProduct(1)
+            await userStore.deleteUser(1)
+        })
+
+        it('should create an order', async () => {
             const result = await store.createOrder({
                 product_id: 1,
                 quantity: 1,
@@ -57,6 +65,7 @@ describe('Order Model', () => {
             const result = await store.getOrders()
             expect(result).toEqual([
                 {
+                    id: 1,
                     product_id: 1,
                     quantity: 1,
                     user_id: 1,
@@ -68,6 +77,7 @@ describe('Order Model', () => {
         it('should return the correct order', async () => {
             const result = await store.getOrderById(1)
             expect(result).toEqual({
+                id: 1,
                 product_id: 1,
                 quantity: 1,
                 user_id: 1,

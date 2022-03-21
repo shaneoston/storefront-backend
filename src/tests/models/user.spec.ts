@@ -26,13 +26,13 @@ describe('User Model', () => {
             const result = await store.createUser({
                 first_name: 'Sallie',
                 last_name: 'Test',
-                password_digest: 'password123'
+                password_digest: 'password123',
             })
             expect(result).toEqual({
-                id: 1,
+                id: 2,
                 first_name: 'Sallie',
                 last_name: 'Test',
-                password_digest: 'password123'
+                password_digest: 'password123',
             })
         })
 
@@ -40,30 +40,29 @@ describe('User Model', () => {
             const result = await store.getUsers()
             expect(result).toEqual([
                 {
-                    id: 1,
+                    id: 2,
                     first_name: 'Sallie',
                     last_name: 'Test',
-                    password_digest: 'password123'
+                    password_digest: 'password123',
                 },
             ])
         })
 
         it('should return the correct user', async () => {
-            const result = await store.getUserById(1)
+            const result = await store.getUserById(2)
             expect(result).toEqual({
-                id: 1,
+                id: 2,
                 first_name: 'Sallie',
                 last_name: 'Test',
-                password_digest: 'password123'
+                password_digest: 'password123',
             })
         })
 
         it('should delete the user', async () => {
-            await store.deleteUser(1)
+            await store.deleteUser(2)
             const result = await store.getUsers()
 
             expect(result).toEqual([])
         })
     })
 })
-

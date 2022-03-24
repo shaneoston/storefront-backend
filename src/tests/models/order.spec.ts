@@ -85,6 +85,23 @@ describe('Order Model', () => {
             })
         })
 
+        it('should update an order', async () => {
+            const result = await store.updateOrder({
+                id: 1,
+                product_id: 1,
+                quantity: 1,
+                user_id: 1,
+                status: 'complete',
+            })
+            expect(result).toEqual({
+                id: 1,
+                product_id: 1,
+                quantity: 1,
+                user_id: 1,
+                status: 'complete',
+            })
+        })
+
         it('should delete the order', async () => {
             await store.deleteOrder(1)
             const result = await store.getOrders()

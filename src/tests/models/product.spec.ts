@@ -38,15 +38,29 @@ describe('Product Model', () => {
             })
         })
 
+        it('should update a product', async () => {
+            const result = await store.updateProduct({
+                id: 2,
+                name: 'Test product 2',
+                price: '$50.00',
+                category: 'New category',
+            })
+            expect(result).toEqual({
+                id: 2,
+                name: 'Test product 2',
+                price: '$50.00',
+                category: 'New category',
+            })
+        })
+
         it('should return a list of products', async () => {
             const result = await store.getProducts()
             expect(result).toEqual([
                 {
                     id: 2,
-                    name: 'Test product',
-                    // prettier-ignore
-                    price: '$40.00',
-                    category: 'Test category',
+                    name: 'Test product 2',
+                    price: '$50.00',
+                    category: 'New category',
                 },
             ])
         })
@@ -55,10 +69,9 @@ describe('Product Model', () => {
             const result = await store.getProductById(2)
             expect(result).toEqual({
                 id: 2,
-                name: 'Test product',
-                // prettier-ignore
-                price: '$40.00',
-                category: 'Test category',
+                name: 'Test product 2',
+                price: '$50.00',
+                category: 'New category',
             })
         })
 

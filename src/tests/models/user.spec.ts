@@ -36,13 +36,28 @@ describe('User Model', () => {
             })
         })
 
+        it('should update a user', async () => {
+            const result = await store.updateUser({
+                id: 2,
+                first_name: 'Madison',
+                last_name: 'Tester',
+                password_digest: 'password123',
+            })
+            expect(result).toEqual({
+                id: 2,
+                first_name: 'Madison',
+                last_name: 'Tester',
+                password_digest: 'password123',
+            })
+        })
+
         it('should return a list of users', async () => {
             const result = await store.getUsers()
             expect(result).toEqual([
                 {
                     id: 2,
-                    first_name: 'Sallie',
-                    last_name: 'Test',
+                    first_name: 'Madison',
+                    last_name: 'Tester',
                     password_digest: 'password123',
                 },
             ])
@@ -52,8 +67,8 @@ describe('User Model', () => {
             const result = await store.getUserById(2)
             expect(result).toEqual({
                 id: 2,
-                first_name: 'Sallie',
-                last_name: 'Test',
+                first_name: 'Madison',
+                last_name: 'Tester',
                 password_digest: 'password123',
             })
         })

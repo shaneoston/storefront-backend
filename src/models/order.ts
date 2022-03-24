@@ -61,6 +61,26 @@ export class OrderStore {
         }
     }
 
+    async updateOrder(o: Order): Promise<Order> {
+        try {
+            const sql = `UPDATE orders SET quantity = $2, product_id = $3, user_id = $4, status = $5 WHERE id = $1 RETURNING *`
+            // @ts-ignore
+            const connection = await pool.connect()
+            const result = await connection.query(sql, [
+                o.id,
+                o.quantity,
+                o.product_id,
+                o.user_id,
+                o.status,
+            ])
+            connection.release()
+
+            return result.rows[0]
+        } catch (err) {
+            throw new Error(`Could not update order ${o.id}. Error: ${err}`)
+        }
+    }
+
     async deleteOrder(id: number): Promise<Order> {
         try {
             const sql = 'DELETE FROM products WHERE id=($1)'

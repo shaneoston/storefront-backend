@@ -21,7 +21,7 @@ describe('User Model', () => {
         })
     })
 
-    describe('CRUD methods tests', () => {
+    describe('CRUD methods: ', () => {
         it('should create a user', async () => {
             const result = await store.createUser({
                 first_name: 'Sallie',

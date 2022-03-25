@@ -21,7 +21,7 @@ describe('Product Model', () => {
         })
     })
 
-    describe('CRUD methods tests', () => {
+    describe('CRUD methods: ', () => {
         it('should create a product', async () => {
             const result = await store.createProduct({
                 name: 'Test product',

@@ -25,7 +25,7 @@ describe('Order Model', () => {
         })
     })
 
-    describe('CRUD methods tests: ', () => {
+    describe('CRUD methods: ', () => {
         beforeAll(async () => {
             await productStore.createProduct({
                 name: 'Superman under roos',

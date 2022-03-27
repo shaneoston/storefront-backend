@@ -1,49 +1,13 @@
 import express from 'express'
+import UsersControllers from '../controllers/users'
 
 const userRouter = express.Router()
+const controller = new UsersControllers()
 
-userRouter.get('/', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the get users endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-
-userRouter.get('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the get user by id endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-
-userRouter.post('/create', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the create user endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-
-userRouter.put('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the update user endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-userRouter.delete('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the delete user endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
+userRouter.get('/', controller.getUsers)
+userRouter.get('/:id', controller.getUserById)
+userRouter.post('/create', controller.createUser)
+userRouter.put('/:id', controller.updateUser)
+userRouter.delete('/:id', controller.deleteUser)
 
 export default userRouter

@@ -1,12 +1,6 @@
 // @ts-ignore
 import pool from '../utils/database'
-
-export type User = {
-    id?: number
-    first_name: string
-    last_name: string
-    password_digest: string
-}
+import User from '../interfaces/user.interface'
 
 export class UserStore {
     async getUsers(): Promise<User[]> {

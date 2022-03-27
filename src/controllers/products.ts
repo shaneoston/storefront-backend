@@ -3,7 +3,7 @@ import { ProductStore } from '../models/product'
 
 const store = new ProductStore()
 
-export default class Products {
+export default class ProductsController {
     async getProducts(_req: express.Request, res: express.Response) {
         try {
             const products = await store.getProducts()
@@ -16,7 +16,7 @@ export default class Products {
 
     async getProductsById(req: express.Request, res: express.Response) {
         try {
-            const product = await store.getProductById(1)
+            const product = await store.getProductById(parseInt(req.params.id))
             res.status(200).json(product)
         } catch (e) {
             res.status(500)

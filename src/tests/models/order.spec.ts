@@ -29,8 +29,7 @@ describe('Order Model', () => {
         beforeAll(async () => {
             await productStore.createProduct({
                 name: 'Superman under roos',
-                // prettier-ignore
-                price: 40.00,
+                price: 40.0,
                 category: 'Test category',
             })
             await userStore.createUser({
@@ -105,7 +104,6 @@ describe('Order Model', () => {
         it('should delete the order', async () => {
             await store.deleteOrder(1)
             const result = await store.getOrders()
-
             expect(result).toEqual([])
         })
     })

@@ -3,8 +3,8 @@ import app from '../../index'
 
 const request = supertest(app)
 
-fdescribe('Product controllers: ', () => {
-    it('should return a new user after it is created', async () => {
+describe('Product controllers: ', () => {
+    it('should return a new user after it is created', () => {
         const data = {
             name: 'Test',
             price: 40.0,
@@ -13,13 +13,13 @@ fdescribe('Product controllers: ', () => {
         request
             .post('/api/products/create')
             .send(data)
-            .then(() => {
-                request.get('/api/products').expect({
-                    id: 1,
-                    name: 'Test',
-                    price: 40.0,
-                    category: 'category a',
-                })
+            .expect('Content-Type', /json/)
+            .expect(201)
+            .expect({
+                id: 1,
+                name: 'Test',
+                price: '$40.00',
+                category: 'category a',
             })
     })
 
@@ -34,7 +34,7 @@ fdescribe('Product controllers: ', () => {
         })
     })
 
-    it('should show all products', async () => {
+    it('should show all products', () => {
         request
             .get('/api/products')
             .expect('Content-Type', /json/)
@@ -46,24 +46,44 @@ fdescribe('Product controllers: ', () => {
                 category: 'category a',
             })
     })
-    //
-    // it('should have a get product by id endpoint', async () => {
-    //     const response = await request.get('/api/products/1')
-    //     expect(response.status).toBe(200)
-    // })
-    //
-    // it('should have a create product endpoint', async () => {
-    //     const response = await request.post('/api/products/create')
-    //     expect(response.status).toBe(200)
-    // })
-    //
-    // it('should have an update product endpoint', async () => {
-    //     const response = await request.put('/api/products/1')
-    //     expect(response.status).toBe(200)
-    // })
-    //
-    // it('should have a delete product endpoint', async () => {
-    //     const response = await request.delete('/api/products/1')
-    //     expect(response.status).toBe(200)
-    // })
+
+    it('should show a product given an id', () => {
+        request
+            .get('/api/products/1')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect({
+                id: 1,
+                name: 'Test',
+                price: 40.0,
+                category: 'category a',
+            })
+    })
+
+    it('should have an update product endpoint', () => {
+        const data = {
+            name: 'Test edited',
+            price: 50.0,
+        }
+        request
+            .put('/api/products/1')
+            .send(data)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect({
+                id: 1,
+                name: 'Test edited',
+                price: 50.0,
+                category: 'category a',
+            })
+    })
+
+    it('should delete a product given its id', () => {
+        request
+            .delete('/api/products/1')
+            .expect(200)
+            .then(() => {
+                request.get('/api/products').expect({})
+            })
+    })
 })

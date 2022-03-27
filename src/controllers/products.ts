@@ -16,9 +16,10 @@ export default class Products {
 
     async getProductsById(req: express.Request, res: express.Response) {
         try {
-            res.send('This is the get product by id endpoint')
+            const product = await store.getProductById(1)
+            res.status(200).json(product)
         } catch (e) {
-            res.status(400)
+            res.status(500)
             res.json(e)
         }
     }
@@ -37,26 +38,36 @@ export default class Products {
             })
             res.status(201).json(product)
         } catch (e) {
-            console.log(e)
-            res.status(400).json(e)
+            res.status(500).json(e)
         }
     }
 
     async updateProduct(req: express.Request, res: express.Response) {
         try {
-            res.send('This is the update product endpoint')
+            if (!req.query.name) {
+                return res.status(400).json({
+                    error: 'Product name is required',
+                })
+            }
+            const product = await store.updateProduct({
+                id: parseInt(req.params.id as string),
+                name: req.query.name as string,
+                price: parseFloat(req.query.price as string),
+                category: req.query.category as string,
+            })
+            res.status(201).json(product)
         } catch (e) {
-            res.status(400)
-            res.json(e)
+            res.status(500).json(e)
         }
     }
 
     async deleteProduct(req: express.Request, res: express.Response) {
         try {
-            res.send('This is the delete product endpoint')
+            await store.deleteProduct(parseInt(req.params.id as string))
+            res.status(200).json({ status: `Deleted product ${req.params.id}` })
         } catch (e) {
-            res.status(400)
-            res.json(e)
+            console.log(req, e)
+            res.status(500).json(e)
         }
     }
 }

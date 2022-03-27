@@ -1,52 +1,13 @@
 import express from 'express'
+import ProductController from '../controllers/products'
 
 const productsRouter = express.Router()
+const controller = new ProductController()
 
-productsRouter.get('/', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the get products endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-
-productsRouter.get('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the get product by id endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-
-productsRouter.post(
-    '/create',
-    (req: express.Request, res: express.Response) => {
-        try {
-            res.send('This is the create product endpoint')
-        } catch (e) {
-            res.status(400)
-            res.json(e)
-        }
-    }
-)
-
-productsRouter.put('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the update product endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
-productsRouter.delete('/:id', (req: express.Request, res: express.Response) => {
-    try {
-        res.send('This is the delete product endpoint')
-    } catch (e) {
-        res.status(400)
-        res.json(e)
-    }
-})
+productsRouter.get('/', controller.getProducts)
+productsRouter.get('/:id', controller.getProductsById)
+productsRouter.post('/create', controller.createProduct)
+productsRouter.put('/:id', controller.updateProduct)
+productsRouter.delete('/:id', controller.deleteProduct)
 
 export default productsRouter

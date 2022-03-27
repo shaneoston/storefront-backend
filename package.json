@@ -38,6 +38,7 @@
     "create-test-db": "db-migrate --config database_create.json db:create full_stack_test",
     "prebuild": "rimraf dist",
     "reset-test-db": "db-migrate reset --e test",
+    "reset-dev-db": "db-migrate reset --e dev",
     "start": "nodemon src/index.ts",
     "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && db-migrate reset --e test"
   }

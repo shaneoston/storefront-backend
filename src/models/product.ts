@@ -1,12 +1,6 @@
 // @ts-ignore
 import pool from '../utils/database'
-
-export type Product = {
-    id?: number
-    name: string
-    price?: number | string
-    category: string
-}
+import Product from '../interfaces/product.interface'
 
 export class ProductStore {
     async getProducts(): Promise<Product[]> {
@@ -51,6 +45,7 @@ export class ProductStore {
                 p.price,
                 p.category,
             ])
+            console.log('result', result)
             connection.release()
 
             return result.rows[0]

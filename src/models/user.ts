@@ -1,6 +1,10 @@
 // @ts-ignore
 import pool from '../utils/database'
+import bcrypt from 'bcrypt'
 import User from '../interfaces/user.interface'
+
+const pepper = process.env.BCRYPT_PASSWORD as string
+const saltRounds = process.env.SALT_ROUNDS as string
 
 export class UserStore {
     async getUsers(): Promise<User[]> {
@@ -33,14 +37,20 @@ export class UserStore {
 
     async createUser(u: User): Promise<User> {
         try {
-            const sql =
-                'INSERT INTO users (first_name, last_name, password_digest) VALUES($1, $2, $3) RETURNING *'
             // @ts-ignore
             const connection = await pool.connect()
+            const sql =
+                'INSERT INTO users (username, first_name, last_name, password_digest) VALUES($1, $2, $3, $4) RETURNING *'
+            const hash = bcrypt.hashSync(
+                u.password + pepper,
+                parseInt(saltRounds)
+            )
+
             const result = await connection.query(sql, [
+                u.username,
                 u.first_name,
                 u.last_name,
-                u.password_digest,
+                hash,
             ])
             connection.release()
 
@@ -54,14 +64,20 @@ export class UserStore {
 
     async updateUser(u: User): Promise<User> {
         try {
-            const sql = `UPDATE users SET first_name = $2, last_name = $3, password_digest = $4 WHERE id = $1 RETURNING *`
             // @ts-ignore
             const connection = await pool.connect()
+            const sql = `UPDATE users SET username = $2, first_name = $3, last_name = $4, password_digest = $5 WHERE id = $1 RETURNING *`
+            const hash = bcrypt.hashSync(
+                u.password + pepper,
+                parseInt(saltRounds)
+            )
+
             const result = await connection.query(sql, [
                 u.id,
+                u.username,
                 u.first_name,
                 u.last_name,
-                u.password_digest,
+                hash,
             ])
             connection.release()
 

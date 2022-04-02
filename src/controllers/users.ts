@@ -1,4 +1,5 @@
 import express from 'express'
+import jwt from 'jsonwebtoken'
 import { UserStore } from '../models/user'
 
 const store = new UserStore()
@@ -26,34 +27,40 @@ export default class UsersController {
 
     async createUser(req: express.Request, res: express.Response) {
         try {
-            if (!req.query.last_name || !req.query.password_digest) {
+            if (!req.query.username || !req.query.password) {
                 return res.status(400).json({
                     error: 'Missing parameters',
                 })
             }
+
             const user = await store.createUser({
+                username: req.query.username as string,
                 first_name: req.query.first_name as string,
                 last_name: req.query.last_name as string,
-                password_digest: req.query.password_digest as string,
+                password: req.query.password as string,
             })
+            // @ts-ignore
+            // const token = jwt.sign({ user }, process.env.TOKEN_SECRET)
             res.status(201).json(user)
         } catch (e) {
+            console.log(e)
             res.status(500).json(e)
         }
     }
 
     async updateUser(req: express.Request, res: express.Response) {
         try {
-            if (!req.query.last_name || !req.query.password_digest) {
+            if (!req.query.username || !req.query.password) {
                 return res.status(400).json({
                     error: 'Missing required parameters',
                 })
             }
             const user = await store.updateUser({
                 id: parseInt(req.params.id as string),
+                username: req.query.username as string,
                 first_name: req.query.first_name as string,
                 last_name: req.query.last_name as string,
-                password_digest: req.query.password_digest as string,
+                password: req.query.password as string,
             })
             res.status(201).json(user)
         } catch (e) {

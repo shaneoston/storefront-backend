@@ -40,8 +40,8 @@ export default class UsersController {
                 password: req.query.password as string,
             })
             // @ts-ignore
-            // const token = jwt.sign({ user }, process.env.TOKEN_SECRET)
-            res.status(201).json(user)
+            const token = jwt.sign({ user }, process.env.TOKEN_SECRET)
+            res.status(201).json(token)
         } catch (e) {
             console.log(e)
             res.status(500).json(e)

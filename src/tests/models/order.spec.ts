@@ -3,39 +3,23 @@ import { ProductStore } from '../../models/product'
 import { UserStore } from '../../models/user'
 
 const store = new OrderStore()
-const productStore = new ProductStore()
-const userStore = new UserStore()
 
 describe('Order Model', () => {
-    describe('CRUD methods exist', () => {
-        it('for getOrders', () => {
-            expect(store.getOrders).toBeDefined()
-        })
-
-        it('for getOrderById', () => {
-            expect(store.getOrderById).toBeDefined()
-        })
-
-        it('for createOrder', () => {
-            expect(store.createOrder).toBeDefined()
-        })
-
-        it('for deleteOrder', () => {
-            expect(store.deleteOrder).toBeDefined()
-        })
-    })
-
     describe('CRUD methods: ', () => {
+        const productStore = new ProductStore()
+        const userStore = new UserStore()
+
         beforeAll(async () => {
             await productStore.createProduct({
-                name: 'Superman under roos',
+                name: 'Superman underroos',
                 price: 40.0,
-                category: 'Test category',
+                category: 'Underwear',
             })
             await userStore.createUser({
+                username: 'ssmith',
                 first_name: 'Sallie',
                 last_name: 'Test',
-                password_digest: 'password123',
+                password: 'password123',
             })
         })
 
@@ -47,14 +31,14 @@ describe('Order Model', () => {
         it('should create an order', async () => {
             const result = await store.createOrder({
                 product_id: 1,
-                quantity: 1,
+                quantity: 10,
                 user_id: 1,
                 status: 'new',
             })
             expect(result).toEqual({
                 id: 1,
                 product_id: 1,
-                quantity: 1,
+                quantity: 10,
                 user_id: 1,
                 status: 'new',
             })
@@ -66,7 +50,7 @@ describe('Order Model', () => {
                 {
                     id: 1,
                     product_id: 1,
-                    quantity: 1,
+                    quantity: 10,
                     user_id: 1,
                     status: 'new',
                 },
@@ -84,11 +68,11 @@ describe('Order Model', () => {
             })
         })
 
-        it('should update an order', async () => {
+        it('should update order status', async () => {
             const result = await store.updateOrder({
                 id: 1,
                 product_id: 1,
-                quantity: 1,
+                quantity: 10,
                 user_id: 1,
                 status: 'complete',
             })

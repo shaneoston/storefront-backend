@@ -40,6 +40,7 @@ CREATE TABLE products (
 #### User
 The table includes the following fields:
 - id
+- username
 - firstName
 - lastName
 - password
@@ -47,8 +48,9 @@ The SQL schema for this table is as follows:
 ```sql
 CREATE TABLE "users" (
      id SERIAL PRIMARY KEY,
+     username VARCHAR,
      first_name VARCHAR(100),
-     last_name VARCHAR(100) NOT NULL,
+     last_name VARCHAR(100),
      password_digest VARCHAR
 )
 ```

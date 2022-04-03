@@ -1,8 +1,11 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import { UserStore } from '../models/user'
+import bcrypt from 'bcrypt'
 
 const store = new UserStore()
+const pepper: string = process.env.BCRYPT_PASSWORD as string
+const saltRounds: number = parseInt(process.env.SALT_ROUNDS as string)
 
 export default class UsersController {
     async getUsers(_req: express.Request, res: express.Response) {
@@ -10,8 +13,7 @@ export default class UsersController {
             const users = await store.getUsers()
             res.status(200).json(users)
         } catch (e) {
-            res.status(500)
-            res.json(e)
+            res.status(500).json(e)
         }
     }
 
@@ -20,31 +22,39 @@ export default class UsersController {
             const user = await store.getUserById(parseInt(req.params.id))
             res.status(200).json(user)
         } catch (e) {
-            res.status(500)
-            res.json(e)
+            res.status(500).json(e)
         }
     }
 
     async createUser(req: express.Request, res: express.Response) {
         try {
-            if (!req.query.username || !req.query.password) {
+            if (!(req.query.username || !req.query.password)) {
                 return res.status(400).json({
-                    error: 'Missing parameters',
+                    error: 'Missing username or password',
                 })
             }
+
+            const hashedPassword = bcrypt.hashSync(
+                req.query.password + pepper,
+                saltRounds
+            )
 
             const user = await store.createUser({
                 username: req.query.username as string,
                 first_name: req.query.first_name as string,
                 last_name: req.query.last_name as string,
-                password: req.query.password as string,
+                password: hashedPassword,
             })
+            delete user.password_digest
+
             // @ts-ignore
-            const token = jwt.sign({ user }, process.env.TOKEN_SECRET)
-            res.status(201).json(token)
+            user.token = jwt.sign(
+                { id: user.id, username: user.username },
+                process.env.TOKEN_SECRET as string
+            )
+            res.status(201).json(user)
         } catch (e) {
-            console.log(e)
-            res.status(500).json(e)
+            return res.status(500).json(e)
         }
     }
 

@@ -44,6 +44,6 @@
     "reset-test-db": "db-migrate reset --e test",
     "reset-dev-db": "db-migrate reset --e dev",
     "start": "nodemon src/index.ts",
-    "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && db-migrate reset --e test"
+    "test": "db-migrate db:drop full_stack_test && yarn create-test-db && db-migrate up -e test && yarn build && NODE_ENV=test jasmine --random=false"
   }
 }

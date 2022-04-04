@@ -11,7 +11,7 @@ describe('Order Model', () => {
     beforeAll(async () => {
         const product = await productStore.createProduct({
             name: 'Superman underroos',
-            price: 40,
+            price: 40.0,
             category: 'Underwear',
         })
         productId = product.id as number

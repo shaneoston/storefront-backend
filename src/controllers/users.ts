@@ -13,16 +13,23 @@ export default class UsersController {
             const users = await store.getUsers()
             res.status(200).json(users)
         } catch (e) {
-            res.status(500).json(e)
+            res.status(400).json(e)
         }
     }
 
     async getUserById(req: express.Request, res: express.Response) {
         try {
             const user = await store.getUserById(parseInt(req.params.id))
-            res.status(200).json(user)
+
+            if (user) {
+                res.status(200).json(user)
+            } else {
+                res.status(404).json('user not found')
+            }
         } catch (e) {
-            res.status(500).json(e)
+            console.log(e)
+            // @ts-ignore
+            res.status(400).json({ e: e.toString() })
         }
     }
 
@@ -54,7 +61,7 @@ export default class UsersController {
             )
             res.status(201).json(user)
         } catch (e) {
-            return res.status(500).json(e)
+            return res.status(400).json(e)
         }
     }
 
@@ -74,7 +81,7 @@ export default class UsersController {
             })
             res.status(201).json(user)
         } catch (e) {
-            res.status(500).json(e)
+            res.status(400).json(e)
         }
     }
 

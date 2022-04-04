@@ -77,9 +77,9 @@ export class UserStore {
 
     async deleteUser(id: number): Promise<User> {
         try {
-            const sql = 'DELETE FROM users WHERE id=($1)'
             // @ts-ignore
             const connection = await pool.connect()
+            const sql = 'DELETE FROM users WHERE id=($1)'
             const result = await connection.query(sql, [id])
             connection.release()
 

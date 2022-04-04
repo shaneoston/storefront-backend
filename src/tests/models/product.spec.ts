@@ -3,37 +3,17 @@ import { ProductStore } from '../../models/product'
 const store = new ProductStore()
 
 describe('Product Model', () => {
-    describe('CRUD methods exist', () => {
-        it('for getProducts', () => {
-            expect(store.getProducts).toBeDefined()
-        })
-
-        it('for getProductsById', () => {
-            expect(store.getProductById).toBeDefined()
-        })
-
-        it('for createProduct', () => {
-            expect(store.createProduct).toBeDefined()
-        })
-
-        it('for deleteProduct', () => {
-            expect(store.deleteProduct).toBeDefined()
-        })
-    })
-
     describe('CRUD methods: ', () => {
         it('should create a product', async () => {
             const result = await store.createProduct({
                 name: 'Test product',
-                // prettier-ignore
-                price: 40.00,
+                price: 40.25,
                 category: 'Test category',
             })
             expect(result).toEqual({
                 id: 2,
                 name: 'Test product',
-                // prettier-ignore
-                price: '$40.00',
+                price: '40.25',
                 category: 'Test category',
             })
         })
@@ -42,13 +22,13 @@ describe('Product Model', () => {
             const result = await store.updateProduct({
                 id: 2,
                 name: 'Test product 2',
-                price: '$50.00',
+                price: 50.25,
                 category: 'New category',
             })
             expect(result).toEqual({
                 id: 2,
                 name: 'Test product 2',
-                price: '$50.00',
+                price: '50.25',
                 category: 'New category',
             })
         })
@@ -59,7 +39,7 @@ describe('Product Model', () => {
                 {
                     id: 2,
                     name: 'Test product 2',
-                    price: '$50.00',
+                    price: '50.25',
                     category: 'New category',
                 },
             ])
@@ -70,12 +50,12 @@ describe('Product Model', () => {
             expect(result).toEqual({
                 id: 2,
                 name: 'Test product 2',
-                price: '$50.00',
+                price: '50.25',
                 category: 'New category',
             })
         })
 
-        it('should delete the book', async () => {
+        it('should delete the product', async () => {
             await store.deleteProduct(2)
             const result = await store.getProducts()
 

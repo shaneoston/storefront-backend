@@ -1,65 +1,87 @@
 import supertest from 'supertest'
 import app from '../../index'
+import { createJWTToken } from '../../utils/authentication'
 
 const request = supertest(app)
+let token: string = createJWTToken(1, 'bearer')
 
-describe('Users controller: ', () => {
-    it('should return a new user after it is created', () => {
+describe('Users endpoints: ', () => {
+    it('/users/create should return a user', () => {
         const data = {
+            username: 'ssmith',
             first_name: 'Sally',
             last_name: 'Smothers',
-            password_digest: 'test1234',
+            password: 'test1234',
         }
         request
             .post('/api/users/create')
+            .set('Authorization', `Bearer ${token}`)
             .send(data)
-            .expect('Content-Type', /json/)
+            .expect('Content-Type', 'application/json')
             .expect(201)
             .expect({
                 id: 1,
+                username: 'ssmith',
                 first_name: 'Sally',
                 last_name: 'Smothers',
-                password_digest: 'test1234',
             })
     })
 
-    it('create user should fail if required last_name is not sent', () => {
+    it('/users/create should fail if required username is not sent', () => {
         const data = {
             first_name: 'Sally',
-            password_digest: 'test1234',
+            last_name: 'Smothers',
+            password: 'test1234',
         }
-        request.post('/api/users/create').send(data).expect(400).expect({
-            error: 'Missing parameters',
-        })
+        request
+            .post('/api/users/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect('Content-Type', 'application/json')
+            .expect(400)
+            .expect({
+                error: 'Missing username or password',
+            })
     })
 
-    it('create user should fail if required password is not sent', () => {
+    it('/users/create should fail if required password is not sent', () => {
         const data = {
+            username: 'ssmith',
             first_name: 'Sally',
-            last_name: 'Smith',
+            last_name: 'Smothers',
         }
-        request.post('/api/users/create').send(data).expect(400).expect({
-            error: 'Missing parameters',
-        })
+        request
+            .post('/api/users/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect('Content-Type', 'application/json')
+            .expect(400)
+            .expect({
+                error: 'Missing username or password',
+            })
     })
 
-    it('should return all users', () => {
+    it('/users should return all users', () => {
         request
             .get('/api/users')
-            .expect('Content-Type', /json/)
+            .set('Authorization', `Bearer ${token}`)
             .expect(200)
-            .expect({
-                id: 1,
-                first_name: 'Sally',
-                last_name: 'Smothers',
-                password_digest: 'test1234',
-            })
+            .expect('Content-Type', 'application/json')
+            .expect([
+                {
+                    id: 1,
+                    username: 'ssmith',
+                    first_name: 'Sally',
+                    last_name: 'Smothers',
+                },
+            ])
     })
 
-    it('should show a user given an id', () => {
+    it('/users/:id should show a user', () => {
         request
             .get('/api/users/1')
-            .expect('Content-Type', /json/)
+            .set('Authorization', `Bearer ${token}`)
+            .expect('Content-Type', 'application/json')
             .expect(200)
             .expect({
                 id: 1,
@@ -69,31 +91,32 @@ describe('Users controller: ', () => {
             })
     })
 
-    it('should update a user', () => {
+    it('/users/:id should update a user', () => {
         const data = {
-            first_name: 'Sally',
+            username: 'madison',
+            first_name: 'Madison',
             last_name: 'Smith',
             password_digest: 'test1234',
         }
         request
             .put('/api/users/1')
+            .set('Authorization', `Bearer ${token}`)
             .send(data)
+            .expect('Content-Type', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
             .expect({
                 id: 1,
-                first_name: 'Sally',
+                username: 'madison',
+                first_name: 'Madison',
                 last_name: 'Smith',
                 password_digest: 'test1234',
             })
     })
 
-    it('should delete a user given its id', () => {
-        request
-            .delete('/api/users/1')
-            .expect(200)
-            .then(() => {
-                request.get('/api/products').expect([])
-            })
+    it('/users/:id should delete a user', () => {
+        request.delete('/api/users/1').expect(200).expect({
+            status: 'Deleted user 1',
+        })
     })
 })

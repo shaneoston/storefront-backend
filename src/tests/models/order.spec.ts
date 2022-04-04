@@ -5,106 +5,90 @@ import { UserStore } from '../../models/user'
 const store = new OrderStore()
 const productStore = new ProductStore()
 const userStore = new UserStore()
+let productId: number, userId: number
 
 describe('Order Model', () => {
-    describe('CRUD methods exist', () => {
-        it('for getOrders', () => {
-            expect(store.getOrders).toBeDefined()
+    beforeAll(async () => {
+        const product = await productStore.createProduct({
+            name: 'Superman underroos',
+            price: 40.0,
+            category: 'Underwear',
         })
-
-        it('for getOrderById', () => {
-            expect(store.getOrderById).toBeDefined()
+        productId = product.id as number
+        const user = await userStore.createUser({
+            username: 'ssmith',
+            first_name: 'Sallie',
+            last_name: 'Test',
+            password: 'password123',
         })
+        userId = user.id as number
+    })
 
-        it('for createOrder', () => {
-            expect(store.createOrder).toBeDefined()
+    afterAll(async () => {
+        await productStore.deleteProduct(productId)
+        await userStore.deleteUser(userId)
+    })
+
+    it('should create an order', async () => {
+        const result = await store.createOrder({
+            product_id: productId,
+            quantity: 10,
+            user_id: userId,
+            status: 'new',
         })
-
-        it('for deleteOrder', () => {
-            expect(store.deleteOrder).toBeDefined()
+        expect(result).toEqual({
+            id: 1,
+            product_id: productId,
+            quantity: 10,
+            user_id: userId,
+            status: 'new',
         })
     })
 
-    describe('CRUD methods: ', () => {
-        beforeAll(async () => {
-            await productStore.createProduct({
-                name: 'Superman under roos',
-                price: 40.0,
-                category: 'Test category',
-            })
-            await userStore.createUser({
-                first_name: 'Sallie',
-                last_name: 'Test',
-                password_digest: 'password123',
-            })
-        })
-
-        afterAll(async () => {
-            await productStore.deleteProduct(1)
-            await userStore.deleteUser(1)
-        })
-
-        it('should create an order', async () => {
-            const result = await store.createOrder({
-                product_id: 1,
-                quantity: 1,
-                user_id: 1,
+    it('should return a list of orders', async () => {
+        const result = await store.getOrders()
+        expect(result).toEqual([
+            {
+                id: 1,
+                product_id: productId,
+                quantity: 10,
+                user_id: userId,
                 status: 'new',
-            })
-            expect(result).toEqual({
-                id: 1,
-                product_id: 1,
-                quantity: 1,
-                user_id: 1,
-                status: 'new',
-            })
-        })
+            },
+        ])
+    })
 
-        it('should return a list of orders', async () => {
-            const result = await store.getOrders()
-            expect(result).toEqual([
-                {
-                    id: 1,
-                    product_id: 1,
-                    quantity: 1,
-                    user_id: 1,
-                    status: 'new',
-                },
-            ])
+    it('should return the correct order', async () => {
+        const result = await store.getOrderById(1)
+        expect(result).toEqual({
+            id: 1,
+            product_id: productId,
+            quantity: 10,
+            user_id: userId,
+            status: 'new',
         })
+    })
 
-        it('should return the correct order', async () => {
-            const result = await store.getOrderById(1)
-            expect(result).toEqual({
-                id: 1,
-                product_id: 1,
-                quantity: 1,
-                user_id: 1,
-                status: 'new',
-            })
+    it('should update order status', async () => {
+        const result = await store.updateOrder({
+            id: 1,
+            product_id: productId,
+            quantity: 10,
+            user_id: userId,
+            status: 'complete',
         })
+        expect(result).toEqual({
+            id: 1,
+            product_id: productId,
+            quantity: 10,
+            user_id: userId,
+            status: 'complete',
+        })
+    })
 
-        it('should update an order', async () => {
-            const result = await store.updateOrder({
-                id: 1,
-                product_id: 1,
-                quantity: 1,
-                user_id: 1,
-                status: 'complete',
-            })
-            expect(result).toEqual({
-                id: 1,
-                product_id: 1,
-                quantity: 1,
-                user_id: 1,
-                status: 'complete',
-            })
-        })
-
-        it('should delete the order', async () => {
-            await store.deleteOrder(1)
-            const result = await store.getOrders()
-            expect(result).toEqual([])
-        })
+    it('should delete the order', async () => {
+        await store.deleteOrder(1)
+        const result = await store.getOrders()
+        expect(result).toEqual([])
     })
 })

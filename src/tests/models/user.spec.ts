@@ -3,81 +3,50 @@ import { UserStore } from '../../models/user'
 const store = new UserStore()
 
 describe('User Model', () => {
-    describe('CRUD methods exist', () => {
-        it('for getUsers', () => {
-            expect(store.getUsers).toBeDefined()
+    it('should create a user', async () => {
+        const result = await store.createUser({
+            username: 'ssmith',
+            first_name: 'Sallie',
+            last_name: 'Test',
+            password: 'password123',
         })
-
-        it('for getUserById', () => {
-            expect(store.getUserById).toBeDefined()
-        })
-
-        it('for createUser', () => {
-            expect(store.createUser).toBeDefined()
-        })
-
-        it('for deleteUser', () => {
-            expect(store.deleteUser).toBeDefined()
-        })
+        expect(result.username).toEqual('ssmith')
     })
 
-    describe('CRUD methods: ', () => {
-        it('should create a user', async () => {
-            const result = await store.createUser({
-                first_name: 'Sallie',
-                last_name: 'Test',
-                password_digest: 'password123',
-            })
-            expect(result).toEqual({
-                id: 2,
-                first_name: 'Sallie',
-                last_name: 'Test',
-                password_digest: 'password123',
-            })
-        })
+    it('should update a user', async () => {
+        const users = await store.getUsers()
+        const userId = users[0].id
 
-        it('should update a user', async () => {
-            const result = await store.updateUser({
-                id: 2,
-                first_name: 'Madison',
-                last_name: 'Tester',
-                password_digest: 'password123',
-            })
-            expect(result).toEqual({
-                id: 2,
-                first_name: 'Madison',
-                last_name: 'Tester',
-                password_digest: 'password123',
-            })
+        const result = await store.updateUser({
+            id: userId,
+            username: 'madison',
+            first_name: 'Madison',
+            last_name: 'Tester',
+            password: 'password123',
         })
+        expect(result.username).toEqual('madison')
+    })
 
-        it('should return a list of users', async () => {
-            const result = await store.getUsers()
-            expect(result).toEqual([
-                {
-                    id: 2,
-                    first_name: 'Madison',
-                    last_name: 'Tester',
-                    password_digest: 'password123',
-                },
-            ])
-        })
+    it('should return a list of users', async () => {
+        const result = await store.getUsers()
+        expect(result.length).toEqual(1)
+    })
 
-        it('should return the correct user', async () => {
-            const result = await store.getUserById(2)
-            expect(result).toEqual({
-                id: 2,
-                first_name: 'Madison',
-                last_name: 'Tester',
-                password_digest: 'password123',
-            })
-        })
+    it('should return the correct user', async () => {
+        const users = await store.getUsers()
+        const userId = users[0].id as number
 
-        it('should delete the user', async () => {
-            await store.deleteUser(2)
-            const result = await store.getUsers()
+        const result = await store.getUserById(userId)
+        expect(result.username).toEqual('madison')
+    })
 
-            expect(result).toEqual([])
-        })
+    it('should delete the user', async () => {
+        let users = await store.getUsers()
+        const userId = users[0].id as number
+
+        await store.deleteUser(userId)
+        users = await store.getUsers()
+
+        expect(users.length).toEqual(0)
     })
 })

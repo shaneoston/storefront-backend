@@ -9,13 +9,17 @@
   "author": "Shane Oston Stowe <shane@keepleft.dev>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/db-migrate-pg": "^0.0.10",
     "@types/express": "^4.17.13",
     "@types/jasmine": "^3.10.3",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.21",
     "@types/pg": "^8.6.5",
     "@types/supertest": "^2.0.11",
@@ -34,12 +38,14 @@
   },
   "scripts": {
     "build": "yarn prebuild && npx tsc",
-    "create-dev-db": "db-migrate --config database_create.json db:create full_stack_dev",
+    "create-dev-db": "db-migrate --config database_create.json db:create full_stack_dev && db-migrate up -e dev",
     "create-test-db": "db-migrate --config database_create.json db:create full_stack_test",
+    "dev-migrations": "db-migrate up -e dev",
     "prebuild": "rimraf dist",
-    "reset-test-db": "db-migrate reset --e test",
-    "reset-dev-db": "db-migrate reset --e dev",
-    "start": "nodemon src/index.ts",
-    "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && db-migrate reset --e test"
+    "reset-test-db": "db-migrate reset -e test",
+    "start": "yarn build && node ./dist/index.js",
+    "reset-dev-db": "db-migrate reset -e dev",
+    "start-dev": "nodemon src/index.ts",
+    "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && yarn reset-test-db"
   }
 }

@@ -32,7 +32,7 @@ The SQL schema for this table is as follows:
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name varchar(100) NOT NULL,
-    price money DEFAULT 0.00,
+    price numeric DEFAULT 0.00,
     category varchar(50)
 )
 ```
@@ -40,6 +40,7 @@ CREATE TABLE products (
 #### User
 The table includes the following fields:
 - id
+- username
 - firstName
 - lastName
 - password
@@ -47,8 +48,9 @@ The SQL schema for this table is as follows:
 ```sql
 CREATE TABLE "users" (
      id SERIAL PRIMARY KEY,
+     username VARCHAR,
      first_name VARCHAR(100),
-     last_name VARCHAR(100) NOT NULL,
+     last_name VARCHAR(100),
      password_digest VARCHAR
 )
 ```

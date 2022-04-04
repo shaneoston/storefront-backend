@@ -43,13 +43,13 @@ export class OrderStore {
     async createOrder(o: Order): Promise<Order> {
         try {
             const sql =
-                'INSERT INTO orders (quantity, product_id, user_id, status) VALUES($1, $2, $3, $4) RETURNING *'
+                'INSERT INTO orders (product_id, quantity, user_id, status) VALUES($1, $2, $3, $4) RETURNING *'
             // @ts-ignore
             const connection = await pool.connect()
 
             const result = await connection.query(sql, [
-                o.quantity,
                 o.product_id,
+                o.quantity,
                 o.user_id,
                 o.status,
             ])

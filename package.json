@@ -38,13 +38,14 @@
   },
   "scripts": {
     "build": "yarn prebuild && npx tsc",
-    "create-dev-db": "db-migrate --config database_create.json db:create full_stack_dev",
+    "create-dev-db": "db-migrate --config database_create.json db:create full_stack_dev && db-migrate up -e dev",
     "create-test-db": "db-migrate --config database_create.json db:create full_stack_test",
     "dev-migrations": "db-migrate up -e dev",
     "prebuild": "rimraf dist",
     "reset-test-db": "db-migrate reset -e test",
+    "start": "yarn build && node ./dist/index.js",
     "reset-dev-db": "db-migrate reset -e dev",
-    "start": "nodemon src/index.ts",
+    "start-dev": "nodemon src/index.ts",
     "test": "db-migrate up -e test && yarn build && NODE_ENV=test jasmine && yarn reset-test-db"
   }
 }

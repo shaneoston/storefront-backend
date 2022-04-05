@@ -3,7 +3,7 @@ import app from '../../index'
 import { createJWTToken } from '../../utils/authentication'
 
 const request = supertest(app)
-let token: string = createJWTToken(2, 'sbearer')
+const token: string = createJWTToken(1, 'bearer')
 
 describe('Orders controllers: ', () => {
     it('/orders/create should return a new order ', () => {
@@ -15,6 +15,7 @@ describe('Orders controllers: ', () => {
         }
         request
             .post('/api/order/create')
+            .set('Authorization', `Bearer ${token}`)
             .send(data)
             .expect('Content-Type', 'application/json')
             .expect(201)
@@ -33,9 +34,14 @@ describe('Orders controllers: ', () => {
             user_id: 1,
             status: 'new',
         }
-        request.post('/api/orders/create').send(data).expect(400).expect({
-            error: 'Missing one or more required parameters',
-        })
+        request
+            .post('/api/orders/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect(400)
+            .expect({
+                error: 'Missing one or more required parameters',
+            })
     })
 
     it('/orders/create should fail if quantity is not included in parameters', () => {
@@ -44,9 +50,14 @@ describe('Orders controllers: ', () => {
             product_id: 1,
             status: 'new',
         }
-        request.post('/api/orders/create').send(data).expect(400).expect({
-            error: 'Missing one or more required parameters',
-        })
+        request
+            .post('/api/orders/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect(400)
+            .expect({
+                error: 'Missing one or more required parameters',
+            })
     })
 
     it('/orders/create should fail if user_id is not included in parameters', () => {
@@ -55,9 +66,14 @@ describe('Orders controllers: ', () => {
             quantity: 1,
             status: 'new',
         }
-        request.post('/api/orders/create').send(data).expect(400).expect({
-            error: 'Missing one or more required parameters',
-        })
+        request
+            .post('/api/orders/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect(400)
+            .expect({
+                error: 'Missing one or more required parameters',
+            })
     })
 
     it('/orders/create should fail if status is not included in parameters', () => {
@@ -66,15 +82,20 @@ describe('Orders controllers: ', () => {
             product_id: 1,
             quantity: 'new',
         }
-        request.post('/api/orders/create').send(data).expect(400).expect({
-            error: 'Missing one or more required parameters',
-        })
+        request
+            .post('/api/orders/create')
+            .set('Authorization', `Bearer ${token}`)
+            .send(data)
+            .expect(400)
+            .expect({
+                error: 'Missing one or more required parameters',
+            })
     })
 
     it('/orders should show all orders', () => {
         request
             .get('/api/orders')
-            .expect('Content-Type', 'applicatioon/json')
+            .expect('Content-Type', 'application/json')
             .expect(200)
             .expect({
                 id: 1,
@@ -88,6 +109,7 @@ describe('Orders controllers: ', () => {
     it('/orders/:id show a order', () => {
         request
             .get('/api/orders/1')
+            .set('Authorization', `Bearer ${token}`)
             .expect('Content-Type', 'application/json')
             .expect(200)
             .expect({
@@ -109,6 +131,7 @@ describe('Orders controllers: ', () => {
         }
         request
             .put('/api/orders/1')
+            .set('Authorization', `Bearer ${token}`)
             .send(data)
             .expect('Content-Type', 'application/json')
             .expect(200)
@@ -124,6 +147,7 @@ describe('Orders controllers: ', () => {
     it('/orders/:id should delete an order given its id', () => {
         request
             .delete('/api/products/1')
+            .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .then(() => {
                 request.get('/api/products').expect({})

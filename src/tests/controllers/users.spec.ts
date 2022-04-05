@@ -3,7 +3,7 @@ import app from '../../index'
 import { createJWTToken } from '../../utils/authentication'
 
 const request = supertest(app)
-let token: string = createJWTToken(1, 'bearer')
+const token: string = createJWTToken(1, 'bearer')
 
 describe('Users controllers: ', () => {
     it('/users/create should return a user', () => {

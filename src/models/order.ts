@@ -1,13 +1,6 @@
 // @ts-ignore
 import pool from '../utils/database'
-
-export type Order = {
-    id?: number
-    product_id: number
-    quantity: number
-    user_id: number
-    status: string
-}
+import Order from '../interfaces/order.interface'
 
 export class OrderStore {
     async getOrders(): Promise<Order[]> {
@@ -83,9 +76,9 @@ export class OrderStore {
 
     async deleteOrder(id: number): Promise<Order> {
         try {
-            const sql = 'DELETE FROM products WHERE id=($1)'
             // @ts-ignore
             const conn = await pool.connect()
+            const sql = 'DELETE FROM products WHERE id=($1)'
 
             const result = await conn.query(sql, [id])
             conn.release()
@@ -93,6 +86,25 @@ export class OrderStore {
             return result.rows[0]
         } catch (err) {
             throw new Error(`Could not delete order ${id}. Error: ${err}`)
+        }
+    }
+
+    async getCurrentOrders(id: number) {
+        try {
+            // @ts-ignore
+            const conn = await pool.connect()
+            const sql = `SELECT *
+                         FROM orders
+                         WHERE user_id = ($1)
+                           AND NOT status = 'complete';`
+            const result = await conn.query(sql, [id])
+            conn.release()
+
+            return result.rows
+        } catch (err) {
+            throw new Error(
+                `Could not get orders for user ${id}. Error: ${err}`
+            )
         }
     }
 }

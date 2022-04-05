@@ -5,4 +5,8 @@ interface Product {
     category: string
 }
 
+// interface TopFiveProducts {
+//     products: Array<Product>
+// }
+
 export default Product

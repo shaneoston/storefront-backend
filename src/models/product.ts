@@ -45,7 +45,6 @@ export class ProductStore {
                 p.price,
                 p.category,
             ])
-            console.log('result', result)
             connection.release()
 
             return result.rows[0]

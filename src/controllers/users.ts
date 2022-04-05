@@ -27,7 +27,6 @@ export default class UsersController {
                 res.status(404).json('user not found')
             }
         } catch (e) {
-            console.log(e)
             // @ts-ignore
             res.status(400).json({ e: e.toString() })
         }

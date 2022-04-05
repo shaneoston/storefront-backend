@@ -5,7 +5,7 @@ import { createJWTToken } from '../../utils/authentication'
 const request = supertest(app)
 let token: string = createJWTToken(1, 'bearer')
 
-describe('Users endpoints: ', () => {
+describe('Users controllers: ', () => {
     it('/users/create should return a user', () => {
         const data = {
             username: 'ssmith',

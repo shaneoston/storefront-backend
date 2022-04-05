@@ -24,5 +24,27 @@ To install the app's dependencies and use the app in test mode, run the followin
 
 To run the tests execute `yarn test`.
 
+NOTE: It is not necessary to run `db-migrate up` at the comand line as the scripts contain the necessary calls to operations. 
+
 ### Ports
 The application runs on port `3000` with database on `5432`.
+
+### Environment variables 
+To satisfy Udacity requirements, the following environment variable are needed.
+```
+NODE_ENV=dev
+
+# DB VARIABLES
+POSTGRES_HOST=localhost
+DEV_POSTGRES_DB=full_stack_dev
+TEST_POSTGRES_DB=full_stack_test
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=H31n3k3n
+
+# BCRYPT VARIABLES
+BCRYPT_PASSWORD=supercalifragilisticexpialodocious
+SALT_ROUNDS=10
+
+# JWT
+TOKEN_SECRET=madisonismydog!
+```

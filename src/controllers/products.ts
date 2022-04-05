@@ -66,8 +66,16 @@ export default class ProductsController {
             await store.deleteProduct(parseInt(req.params.id as string))
             res.status(200).json({ status: `Deleted product ${req.params.id}` })
         } catch (e) {
-            console.log(req, e)
             res.status(500).json(e)
         }
     }
+
+    // async getTopFive(_req: express.Request, res: express.Response) {
+    //     try {
+    //         const topFiveProducts = await store.getTopFiveProducts()
+    //         res.status(200).json(topFiveProducts)
+    //     } catch (e) {
+    //         res.status(400).json(e)
+    //     }
+    // }
 }

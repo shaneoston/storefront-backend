@@ -21,7 +21,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Order
 - Index [token required] (GET `/api/orders`)
 - Show [token required] (GET `/api/orders/:id`)
-- Create [token required] (POST `/api/orders`)
+- Create (POST `/api/orders`)
 - Update [token required] (PUT `/api/orders/:id`)
 - Delete [token required] (DELETE `/api/orders/:id`)
 - Current Order by user (args: user id)[token required] (GET `/api/orders/current-orders`)

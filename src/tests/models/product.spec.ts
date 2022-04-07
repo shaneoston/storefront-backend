@@ -10,7 +10,7 @@ describe('Product Model', () => {
             category: 'Test category',
         })
         expect(result).toEqual({
-            id: 2,
+            id: 1,
             name: 'Test product',
             price: '40.25',
             category: 'Test category',
@@ -19,13 +19,13 @@ describe('Product Model', () => {
 
     it('should update a product', async () => {
         const result = await store.updateProduct({
-            id: 2,
+            id: 1,
             name: 'Test product 2',
             price: 50.25,
             category: 'New category',
         })
         expect(result).toEqual({
-            id: 2,
+            id: 1,
             name: 'Test product 2',
             price: '50.25',
             category: 'New category',
@@ -36,7 +36,7 @@ describe('Product Model', () => {
         const result = await store.getProducts()
         expect(result).toEqual([
             {
-                id: 2,
+                id: 1,
                 name: 'Test product 2',
                 price: '50.25',
                 category: 'New category',
@@ -45,9 +45,9 @@ describe('Product Model', () => {
     })
 
     it('should return the correct product', async () => {
-        const result = await store.getProductById(2)
+        const result = await store.getProductById(1)
         expect(result).toEqual({
-            id: 2,
+            id: 1,
             name: 'Test product 2',
             price: '50.25',
             category: 'New category',
@@ -55,7 +55,7 @@ describe('Product Model', () => {
     })
 
     it('should delete the product', async () => {
-        await store.deleteProduct(2)
+        await store.deleteProduct(1)
         const result = await store.getProducts()
 
         expect(result).toEqual([])

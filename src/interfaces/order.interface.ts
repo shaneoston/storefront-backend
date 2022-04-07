@@ -1,9 +1,14 @@
 interface Order {
     id?: number
-    product_id: number
-    quantity: number
     user_id: number
     status: string
 }
 
-export default Order
+interface ProductToOrder {
+    id?: number
+    order_id: number
+    product_id: number
+    quantity: number
+}
+
+export { Order, ProductToOrder }

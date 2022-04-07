@@ -15,7 +15,6 @@ describe('Users controllers: ', () => {
         }
         request
             .post('/api/users/create')
-            .set('Authorization', `Bearer ${token}`)
             .send(data)
             .expect('Content-Type', 'application/json')
             .expect(201)

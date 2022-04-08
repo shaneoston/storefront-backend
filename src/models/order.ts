@@ -1,6 +1,6 @@
 // @ts-ignore
 import pool from '../utils/database'
-import Order from '../interfaces/order.interface'
+import { Order, ProductToOrder } from '../interfaces/order.interface'
 
 export class OrderStore {
     async getOrders(): Promise<Order[]> {
@@ -36,16 +36,11 @@ export class OrderStore {
     async createOrder(o: Order): Promise<Order> {
         try {
             const sql =
-                'INSERT INTO orders (product_id, quantity, user_id, status) VALUES($1, $2, $3, $4) RETURNING *'
+                'INSERT INTO orders (user_id, status) VALUES($1, $2) RETURNING *'
             // @ts-ignore
             const connection = await pool.connect()
 
-            const result = await connection.query(sql, [
-                o.product_id,
-                o.quantity,
-                o.user_id,
-                o.status,
-            ])
+            const result = await connection.query(sql, [o.user_id, o.status])
             connection.release()
 
             return result.rows[0]
@@ -56,13 +51,11 @@ export class OrderStore {
 
     async updateOrder(o: Order): Promise<Order> {
         try {
-            const sql = `UPDATE orders SET quantity = $2, product_id = $3, user_id = $4, status = $5 WHERE id = $1 RETURNING *`
+            const sql = `UPDATE orders SET user_id = $2, status = $5 WHERE id = $1 RETURNING *`
             // @ts-ignore
             const connection = await pool.connect()
             const result = await connection.query(sql, [
                 o.id,
-                o.quantity,
-                o.product_id,
                 o.user_id,
                 o.status,
             ])
@@ -95,8 +88,7 @@ export class OrderStore {
             const conn = await pool.connect()
             const sql = `SELECT *
                          FROM orders
-                         WHERE user_id = ($1)
-                           AND NOT status = 'complete';`
+                         WHERE user_id = ($1);`
             const result = await conn.query(sql, [id])
             conn.release()
 
@@ -105,6 +97,26 @@ export class OrderStore {
             throw new Error(
                 `Could not get orders for user ${id}. Error: ${err}`
             )
+        }
+    }
+
+    async addProductToOrder(p: ProductToOrder): Promise<ProductToOrder> {
+        try {
+            const sql =
+                'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *'
+            // @ts-ignore
+            const connection = await pool.connect()
+
+            const result = await connection.query(sql, [
+                p.order_id,
+                p.product_id,
+                p.quantity,
+            ])
+            connection.release()
+
+            return result.rows[0]
+        } catch (err) {
+            throw new Error(`Could not add product. Error: ${err}`)
         }
     }
 }

@@ -64,23 +64,44 @@ CREATE TABLE "users" (
 #### Orders
 The table includes the following fields:
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete)
 The SQL schema for this table is as follows:
 ```sql
 CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    product_id int NOT NULL,
-    quantity int NOT NULL,
-    user_id INT NOT NULL,
-    status VARCHAR(8) NOT NULL,
-    CONSTRAINT fk_orders_users
+      id SERIAL PRIMARY KEY,
+      user_id INT NOT NULL,
+      status varchar NOT NULL,
+      CONSTRAINT fk_orders_users
         FOREIGN KEY (user_id)
-            REFERENCES users(id),
-    CONSTRAINT fk_orders_products
+          REFERENCES users(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE
+);
+```
+
+#### order_products
+The table includes the following fields:
+- id
+- product_id
+- order_id
+- quantity
+  The SQL schema for this table is as follows:
+```sql
+CREATE TABLE order_products (
+      id SERIAL PRIMARY KEY,
+      order_id INT NOT NULL,
+      product_id INT NOT NULL,
+      quantity INT NOT NULL,
+      CONSTRAINT fk_order
+        FOREIGN KEY (order_id)
+          REFERENCES orders(id)
+          ON DELETE CASCADE
+          ON UPDATE CASCADE,
+      CONSTRAINT fk_products
         FOREIGN KEY (product_id)
-            REFERENCES products(id)
+          REFERENCES products(id)
+          ON DELETE CASCADE
+          ON  UPDATE CASCADE
 );
 ```

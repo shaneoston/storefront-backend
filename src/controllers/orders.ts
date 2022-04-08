@@ -24,32 +24,53 @@ export default class OrdersController {
 
     async createOrder(req: express.Request, res: express.Response) {
         try {
-            const { product_id, quantity, user_id, status } = req.query
+            const { user_id, status } = req.query
 
-            if (!product_id || !quantity || !user_id || !status) {
+            if (!user_id || !status) {
                 return res.status(400).json({
                     error: 'Missing one or more required parameters',
                 })
             }
 
             const order = await store.createOrder({
-                product_id: parseInt(product_id as string),
-                quantity: parseInt(quantity as string),
                 user_id: parseInt(user_id as string),
-                status: product_id as string,
+                status: status as string,
             })
+
             res.status(201).json(order)
         } catch (e) {
             res.status(400).json(e)
         }
     }
 
+    async addProductToOrder(req: express.Request, res: express.Response) {
+        try {
+            const order_id = parseInt(req.params.id)
+            const product_id = parseInt(req.query.product_id as string)
+            const quantity = parseInt(req.query.quantity as string)
+
+            if (!order_id || !product_id || !quantity) {
+                return res.status(400).json({
+                    error: 'Missing one or more required parameters',
+                })
+            }
+
+            const product = await store.addProductToOrder({
+                order_id,
+                product_id,
+                quantity,
+            })
+
+            res.status(200).json(product)
+        } catch (e) {}
+    }
+
     async updateOrder(req: express.Request, res: express.Response) {
         try {
-            const { product_id, quantity, user_id, status } = req.query
+            const { user_id, status } = req.query
             const id = req.params.id
 
-            if (!id || !product_id || !quantity || !user_id || !status) {
+            if (!id || !user_id || !status) {
                 return res.status(400).json({
                     error: 'Missing one or more required parameters',
                 })
@@ -57,10 +78,8 @@ export default class OrdersController {
 
             const order = await store.updateOrder({
                 id: parseInt(req.params.id as string),
-                product_id: parseInt(product_id as string),
-                quantity: parseInt(quantity as string),
                 user_id: parseInt(user_id as string),
-                status: product_id as string,
+                status: status as string,
             })
             res.status(201).json(order)
         } catch (e) {

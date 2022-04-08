@@ -1,3 +1,0 @@
-ALTER TABLE users
-    ADD COLUMN username VARCHAR(25) NOT NULL,
-    ALTER COLUMN last_name DROP NOT NULL;

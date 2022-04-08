@@ -8,62 +8,43 @@ const token: string = createJWTToken(1, 'bearer')
 describe('Orders controllers: ', () => {
     it('/orders/create should return a new order ', () => {
         const data = {
-            product_id: 1,
-            quantity: 1,
             user_id: 1,
             status: 'new',
         }
         request
-            .post('/api/order/create')
+            .post('/api/orders/create')
             .set('Authorization', `Bearer ${token}`)
             .send(data)
             .expect('Content-Type', 'application/json')
             .expect(201)
             .expect({
                 id: 1,
-                product_id: 1,
-                quantity: 1,
                 user_id: 1,
                 status: 'new',
             })
     })
 
-    it('/orders/create should fail if product_id is not included in parameters', () => {
+    it('orders/add-product/:id should add a product to an order', () => {
         const data = {
-            quantity: 1,
-            user_id: 1,
-            status: 'new',
-        }
-        request
-            .post('/api/orders/create')
-            .set('Authorization', `Bearer ${token}`)
-            .send(data)
-            .expect(400)
-            .expect({
-                error: 'Missing one or more required parameters',
-            })
-    })
-
-    it('/orders/create should fail if quantity is not included in parameters', () => {
-        const data = {
-            user_id: 1,
             product_id: 1,
-            status: 'new',
+            quantity: 10,
         }
         request
-            .post('/api/orders/create')
+            .post('/api/orders/add-product/1')
             .set('Authorization', `Bearer ${token}`)
             .send(data)
-            .expect(400)
+            .expect('Content-Type', 'application/json')
+            .expect(201)
             .expect({
-                error: 'Missing one or more required parameters',
+                id: 1,
+                order_id: 1,
+                product_id: 1,
+                quantity: 10,
             })
     })
 
     it('/orders/create should fail if user_id is not included in parameters', () => {
         const data = {
-            product_id: 1,
-            quantity: 1,
             status: 'new',
         }
         request
@@ -79,8 +60,6 @@ describe('Orders controllers: ', () => {
     it('/orders/create should fail if status is not included in parameters', () => {
         const data = {
             user_id: 1,
-            product_id: 1,
-            quantity: 'new',
         }
         request
             .post('/api/orders/create')
@@ -99,8 +78,6 @@ describe('Orders controllers: ', () => {
             .expect(200)
             .expect({
                 id: 1,
-                product_id: 1,
-                quantity: 1,
                 user_id: 1,
                 status: 'new',
             })
@@ -114,8 +91,6 @@ describe('Orders controllers: ', () => {
             .expect(200)
             .expect({
                 id: 1,
-                product_id: 1,
-                quantity: 1,
                 user_id: 1,
                 status: 'new',
             })
@@ -124,8 +99,6 @@ describe('Orders controllers: ', () => {
     it('/orders should update an order', () => {
         const data = {
             id: 1,
-            product_id: 1,
-            quantity: 10,
             user_id: 1,
             status: 'in progress',
         }
@@ -137,8 +110,6 @@ describe('Orders controllers: ', () => {
             .expect(200)
             .expect({
                 id: 1,
-                product_id: 1,
-                quantity: 10,
                 user_id: 1,
                 status: 'in progress',
             })
@@ -146,11 +117,13 @@ describe('Orders controllers: ', () => {
 
     it('/orders/:id should delete an order given its id', () => {
         request
-            .delete('/api/products/1')
+            .delete('/api/orders/1')
             .set('Authorization', `Bearer ${token}`)
             .expect(200)
-            .then(() => {
-                request.get('/api/products').expect({})
+            .expect({
+                id: 1,
+                user_id: 1,
+                status: 'in progress',
             })
     })
 
@@ -162,8 +135,6 @@ describe('Orders controllers: ', () => {
             .expect(200)
             .expect({
                 id: 1,
-                product_id: 1,
-                quantity: 10,
                 user_id: 1,
                 status: 'in progress',
             })

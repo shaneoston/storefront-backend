@@ -34,21 +34,21 @@ export default class UsersController {
 
     async createUser(req: express.Request, res: express.Response) {
         try {
-            if (!(req.query.username || !req.query.password)) {
+            if (!(req.body.username || !req.body.password)) {
                 return res.status(400).json({
                     error: 'Missing username or password',
                 })
             }
 
             const hashedPassword = bcrypt.hashSync(
-                req.query.password + pepper,
+                req.body.password + pepper,
                 saltRounds
             )
 
             const user = await store.createUser({
-                username: req.query.username as string,
-                first_name: req.query.first_name as string,
-                last_name: req.query.last_name as string,
+                username: req.body.username as string,
+                first_name: req.body.first_name as string,
+                last_name: req.body.last_name as string,
                 password: hashedPassword,
             })
             delete user.password_digest
@@ -66,18 +66,20 @@ export default class UsersController {
 
     async updateUser(req: express.Request, res: express.Response) {
         try {
-            if (!req.query.username || !req.query.password) {
+            if (!req.body.username || !req.body.password) {
                 return res.status(400).json({
                     error: 'Missing required parameters',
                 })
             }
             const user = await store.updateUser({
                 id: parseInt(req.params.id as string),
-                username: req.query.username as string,
-                first_name: req.query.first_name as string,
-                last_name: req.query.last_name as string,
-                password: req.query.password as string,
+                username: req.body.username as string,
+                first_name: req.body.first_name as string,
+                last_name: req.body.last_name as string,
+                password: req.body.password as string,
             })
+            delete user.password_digest
+
             res.status(201).json(user)
         } catch (e) {
             res.status(400).json(e)

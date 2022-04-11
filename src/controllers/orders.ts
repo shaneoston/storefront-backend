@@ -24,7 +24,7 @@ export default class OrdersController {
 
     async createOrder(req: express.Request, res: express.Response) {
         try {
-            const { user_id, status } = req.query
+            const { user_id, status } = req.body
 
             if (!user_id || !status) {
                 return res.status(400).json({
@@ -46,8 +46,8 @@ export default class OrdersController {
     async addProductToOrder(req: express.Request, res: express.Response) {
         try {
             const order_id = parseInt(req.params.id)
-            const product_id = parseInt(req.query.product_id as string)
-            const quantity = parseInt(req.query.quantity as string)
+            const product_id = parseInt(req.body.product_id as string)
+            const quantity = parseInt(req.body.quantity as string)
 
             if (!order_id || !product_id || !quantity) {
                 return res.status(400).json({
@@ -67,7 +67,7 @@ export default class OrdersController {
 
     async updateOrder(req: express.Request, res: express.Response) {
         try {
-            const { user_id, status } = req.query
+            const { user_id, status } = req.body
             const id = req.params.id
 
             if (!id || !user_id || !status) {

@@ -16,7 +16,7 @@ To install the app's dependencies and use the app in dev mode, run the following
 
 `yarn && yarn create-dev-db` 
 
-`yarn create-db` runs a script that uses db-migrate to create a new database called `full_stack_dev` and runs the migrations to create the tables. This script assumes you have installed `postgres` on your local system and the server is running.
+`yarn create-dev-db` runs a script that uses db-migrate to create a new database called `full_stack_dev` and runs the migrations to create the tables. This script assumes you have installed `postgres` on your local system and the server is running.
 
 To run the app in dev mode execute `yarn start`.
 ### Test mode

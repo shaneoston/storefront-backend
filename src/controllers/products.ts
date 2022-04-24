@@ -35,6 +35,8 @@ export default class ProductsController {
                 name: req.body.name as string,
                 price: parseFloat(req.body.price as string),
                 category: req.body.category as string,
+                description: req.body.description as string,
+                url: req.body.url as string,
             })
             res.status(201).json(product)
         } catch (e) {
@@ -54,6 +56,8 @@ export default class ProductsController {
                 name: req.body.name as string,
                 price: parseFloat(req.body.price as string),
                 category: req.body.category as string,
+                description: req.body.description as string,
+                url: req.body.url as string,
             })
             res.status(201).json(product)
         } catch (e) {

@@ -3,10 +3,8 @@ interface Product {
     name: string
     price?: number | string
     category: string
+    description: string
+    url: string
 }
-
-// interface TopFiveProducts {
-//     products: Array<Product>
-// }
 
 export default Product

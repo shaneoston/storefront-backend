@@ -36,7 +36,7 @@ export class ProductStore {
     async createProduct(p: Product): Promise<Product> {
         try {
             const sql =
-                'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *'
+                'INSERT INTO products (name, price, category, url, description) VALUES($1, $2, $3, $4, $5) RETURNING *'
             // @ts-ignore
             const connection = await pool.connect()
 
@@ -44,6 +44,8 @@ export class ProductStore {
                 p.name,
                 p.price,
                 p.category,
+                p.url,
+                p.description,
             ])
             connection.release()
 
